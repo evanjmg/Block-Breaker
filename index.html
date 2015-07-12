@@ -3,12 +3,26 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Block Breaker</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<div id="top-menu">
+	<h1>Giffy Breaker</h1>
+	<input type="button" value="Restart Game" readonly>
+	<select id="difficulty">
+		<option>Easy</option>
+		<option>Medium</option>
+		<option>Hard</option>
+	</select>
+	<input type="text" placeholder="Search Gifs" id="celeb-search">
+	<input type="text" placeholder="Search Gifs" id="submit">
+
+</div>
 <canvas width="700" height="500" id="canvas">
 	Your browser does not support this game.
 </canvas>
+
 <script src="./js/jquery-2.1.4.min.js"></script>
-	<script src="./js/game.js"></script>
+	 <script src="./js/game.js"></script>
 </body>
 </html>
