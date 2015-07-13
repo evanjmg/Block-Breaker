@@ -1,13 +1,14 @@
 canvas {
- border: 3px solid white;
- border-radius: 4px;
+	border: 3px solid white;
+	border-radius: 4px;
 }
 body {
 	background-color: #1976D2;
 	color: #FFFFFF;
 	font-family: 'Futura', Helvetica, sans-serif;
 	font-weight:bold;
-	font-size: 20px;
+	text-transform: uppercase;
+	font-size: 15px;
 
 }
 div#top-menu {
@@ -18,20 +19,48 @@ h1 {
 	font-weight: bold;
 }
 input,select {
-	font-size: 20px;
+	text-transform: uppercase;
+	font-size: 15px;
 	border-radius: 4px;
 	border: 3px solid white;
 	background-color: transparent;
 	color:#FFFFFF;
+	font-family: 'Futura', Helvetica, sans-serif;
 }
-input[type="button"] {
-	background-color: transparent;
-	color:#FFFFFF;
-}
-select {
+input#start { 
+	background-color: #f84783;}
+	#score {
+		border:none;
+	}
 
+	select {
+		background-color: #009688;
+	}
+
+input#submit {
+	background-color: #00BCD4;
 }
-/*#sky
+
+	.dark-primary-color    { background: #1976D2; }
+	.default-primary-color { background: #2196F3; }
+	.light-primary-color   { background: #BBDEFB; }
+	.text-primary-color    { color: #FFFFFF; }
+	.accent-color          { background: #FFEB3B; }
+	.primary-text-color    { color: #212121; }
+	.secondary-text-color  { color: #727272; }
+	.divider-color         { border-color: #B6B6B6; }
+
+
+	.dark-primary-color    { background: #FBC02D; }
+	.default-primary-color { background: #FFEB3B; }
+	.light-primary-color   { background: #FFF9C4; }
+	.text-primary-color    { color: #212121; }
+	.accent-color          { background: #FF4081; }
+	.primary-text-color    { color: #212121; }
+	.secondary-text-color  { color: #727272; }
+	.divider-color         { border-color: #B6B6B6; }
+
+/*#sky*//*
 {
 	position: absolute;
 	left: 0;
@@ -79,4 +108,4 @@ select {
 	background-image: url(../images/cloud3.gif);
 	background-repeat: no-repeat;
 	background-color: red;
-}*/
+	}*/

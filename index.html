@@ -6,23 +6,24 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<div id="top-menu">
-	<h1>Giffy Breaker</h1>
-	<input type="button" value="Restart Game" readonly>
-	<select id="difficulty">
-		<option>Easy</option>
-		<option>Medium</option>
-		<option>Hard</option>
-	</select>
-	<input type="text" placeholder="Search Gifs" id="celeb-search">
-	<input type="text" placeholder="Search Gifs" id="submit">
+	<div id="top-menu">
+		<h1>Giphy Breaker</h1>
+		<input type="button" value="Start Game" id="start" readonly>
+		<select id="difficulty">
+			<option class="green">Easy</option>
+			<option class="yellow">Medium</option>
+			<option class="red">Hard</option>
+		</select>
+		<input type="text" placeholder="Search Gifs" id="celeb-search">
+		<input type="button" value="Search" id="submit">
+		&nbsp; SCORE &nbsp;<input type="text" value="0" id="score">
 
-</div>
-<canvas width="700" height="500" id="canvas">
-	Your browser does not support this game.
-</canvas>
+	</div>
+	<canvas width="650" height="500" id="canvas">
+		Your browser does not support this game.
+	</canvas>
 
-<script src="./js/jquery-2.1.4.min.js"></script>
-	 <script src="./js/game.js"></script>
+	<script src="./js/jquery-2.1.4.min.js"></script>
+	<script src="./js/game.js"></script>
 </body>
 </html>
