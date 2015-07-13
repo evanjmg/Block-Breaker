@@ -23,10 +23,9 @@ Game.init = function () {
 Game.loop = function () {
   ctx.clearRect(0,0, canvas.width, canvas.height);
   Game.bindEvents();
-  Game.setupBlocks();
   Game.setupBall();
   Game.setupSlider();
-  Game.setupBlocks();
+  Game.blocks.drawBlocks();
   Game.sliderMouseControl();
   window.requestAnimationFrame(function () {
     Game.loop();
@@ -69,31 +68,16 @@ Game.setupBall = function() {
     Game.ball.vx = -Game.ball.vx;
   }
   // Bounce off the slider
-  if ((Game.ball.y + Game.ball.vy > Game.slider.y) && (Game.ball.y + Game.ball.vy < Game.slider.y + 100)
-    && (Game.ball.x + Game.ball.vx <  Game.slider.x + 200))  {
-    if (Game.ball.x + Game.ball.vx > Game.slider.x ) {
+  if (Game.ball.y + Game.ball.vy > Game.slider.y
+   && Game.ball.y + Game.ball.vy < Game.slider.y + 100
+    && Game.ball.x + Game.ball.vx <  Game.slider.x + 200
+    && Game.ball.x + Game.ball.vx > Game.slider.x ) {
       Game.ball.vy = -Game.ball.vy;
     }
-  }
   // If the game has block(s) 
   // Set the ball to hit the block
 
-  var i = 0;
-  for (i; i < Game.blocks.blocks.length; i++) {
-    var block = Game.blocks.blocks[i];
-    if (
-      // Game.ball.y + Game.ball.vy > block.y 
-      Game.ball.y + Game.ball.vy > block.y 
-      && Game.ball.y + Game.ball.vy < block.y + block.width
-      && Game.ball.x + Game.ball.vx < block.x + block.width
-      && Game.ball.x + Game.ball.vx > block.x ) {
-      Game.ball.vy = -Game.ball.vy;
-    ctx.clearRect(block.x, block.y, block.width,block.height);
-    Game.score.count++;
-    console.log('works');
-    $score = $('#score').val(Game.score.count);
-  }
-}
+
 
 }
 
@@ -150,6 +134,7 @@ function Block(x,y) {
   this.width = 50;
   this.height = 50;
   this.spacing = 50;
+  this.active = this.active || true;
   this.color = '#FF4081';
   this.drawBlock = function(){
     var x = this.x,
@@ -166,31 +151,44 @@ function Block(x,y) {
   };
 }
 
-
 Game.blocks = {
   blockOn: true,
   blocks: [],
-  columnHeight: 200,
+  columnHeight: 300,
   drawBlocks: function() {
     var x,
     y = 50;
+    var i = 0;
     while(y < this.columnHeight) {
       x = 50;
       while (x < canvas.width) {
-        var block = new Block(x, y);
+        var block = this.blocks[i] || new Block(x, y);
         x += block.width + block.spacing;
+        if (block.active == true) {
         block.drawBlock();
         this.blocks.push(block);
-      }
+        i++;
+          if (Game.ball.y + Game.ball.vy > block.y 
+              && Game.ball.y + Game.ball.vy < block.y + block.width
+              && Game.ball.x + Game.ball.vx < block.x + block.width
+              && Game.ball.x + Game.ball.vx > block.x ) 
+            {
+              Game.ball.vy = -Game.ball.vy;
+            ctx.clearRect(block.x, block.y, block.width,block.height);
+            Game.score.count++;
+            $score = $('#score').val(Game.score.count);
+            block.active = false;
+            console.log("check" + block.active)
+            break;
+        }
+          }
+        }
       y += block.height + block.spacing;
+     
     }
-
   }
 }
 
-Game.setupBlocks = function () {
-  Game.blocks.drawBlocks();
-}
 
 // Move this into an initialize function
 
