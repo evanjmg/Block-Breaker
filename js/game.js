@@ -23,9 +23,9 @@ Game.init = function () {
 Game.loop = function () {
   ctx.clearRect(0,0, canvas.width, canvas.height);
   Game.bindEvents();
-  Game.setupBall();
   Game.setupSlider();
   Game.blocks.drawBlocks();
+  Game.setupBall();
   Game.sliderMouseControl();
   window.requestAnimationFrame(function () {
     Game.loop();
@@ -86,7 +86,7 @@ Game.slider = {
   y: 400,
   width: 200,
   height: 50,
-  color: 'white',
+  color: '#FFEB3B',
   drawSlider: function() {
     ctx.beginPath();
     ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -159,15 +159,24 @@ Game.blocks = {
     var x,
     y = 50;
     var i = 0;
+    // jump to next row
     while(y < this.columnHeight) {
       x = 50;
+      // setup blocks horizontally
       while (x < canvas.width) {
+        // store  a block at i or create a new block
         var block = this.blocks[i] || new Block(x, y);
+        if (!this.blocks[i]) {
+        this.blocks.push(block) }
+        //  setup x-axis position of single block
         x += block.width + block.spacing;
-        if (block.active == true) {
+        // if block is active, draw it and set collisions
         block.drawBlock();
-        this.blocks.push(block);
         i++;
+        if (block.active == false) {
+          ctx.clearRect(block.x, block.y, block.width,block.height);
+        }
+        if (block.active == true) {
           if (Game.ball.y + Game.ball.vy > block.y 
               && Game.ball.y + Game.ball.vy < block.y + block.width
               && Game.ball.x + Game.ball.vx < block.x + block.width
@@ -178,9 +187,9 @@ Game.blocks = {
             Game.score.count++;
             $score = $('#score').val(Game.score.count);
             block.active = false;
-            console.log("check" + block.active)
             break;
-        }
+          }
+
           }
         }
       y += block.height + block.spacing;
@@ -199,7 +208,6 @@ canvas.addEventListener("mouseout",function(e){
 Game.score = {
   count: 0
 }
-
 Game.restart = function () {
   Game.score.count = 0;
   Game.blocks.blockOn == true;
