@@ -1,5 +1,8 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Advanced_animations
 // https://html.spec.whatwg.org/multipage/scripting.html#attr-canvas-width
+window.onload = function () {
+  Game.init();
+}
 
 var Game = Game || {},
 UI = UI || {},
@@ -8,22 +11,28 @@ ctx = canvas.getContext('2d'),
 raf,
 running = false;
 
-// window.requestAnimationFrame(Game.setup);
+Game.init = function () {
+  window.requestAnimationFrame(function () {
+    Game.width  = canvas.width;
+    Game.height = canvas.height;
+    Game.loop();
+  });
+}
 
-Game.setup = function () {
-  Game.width  = canvas.width;
-  Game.height = canvas.height;
+
+Game.loop = function () {
   ctx.clearRect(0,0, canvas.width, canvas.height);
   Game.bindEvents();
   Game.setupBlocks();
   Game.setupBall();
   Game.setupSlider();
-  if (Game.blocks.blockOn == true) { Game.setupBlocks(); }
+  Game.setupBlocks();
   Game.sliderMouseControl();
   window.requestAnimationFrame(function () {
-    Game.setup() 
+    Game.loop();
   });
 }
+
 Game.bindEvents = function () {
   $start = $('#start').on('click', start);
   $difficulty = $('#difficulty');
@@ -31,7 +40,7 @@ Game.bindEvents = function () {
 }
 
 Game.ball = {
-  x: 100,
+  x: 400,
   y: 50,
   vx: 5,
   vy: 5,
@@ -70,26 +79,22 @@ Game.setupBall = function() {
   // Set the ball to hit the block
 
   var i = 0;
-  for (i; i < Game.blocks.blocks[i]; i++) {
-    var block = blocks[i];
-    if ((Game.ball.y + Game.ball.vy > block.y && Game.ball.y + Game.ball.vy < block.y - block.height ) && 
-        (Game.ball.x + Game.ball.vx > block.x && Game.ball.x + Game.ball.vx > block.x - block.width)) {
-      
-        Game.ball.vy = -Game.ball.vy;
-    }
+  for (i; i < Game.blocks.blocks.length; i++) {
+    var block = Game.blocks.blocks[i];
+    if (
+      // Game.ball.y + Game.ball.vy > block.y 
+      Game.ball.y + Game.ball.vy > block.y 
+      && Game.ball.y + Game.ball.vy < block.y + block.width
+      && Game.ball.x + Game.ball.vx < block.x + block.width
+      && Game.ball.x + Game.ball.vx > block.x ) {
+      Game.ball.vy = -Game.ball.vy;
+    ctx.clearRect(block.x, block.y, block.width,block.height);
+    Game.score.count++;
+    console.log('works');
+    $score = $('#score').val(Game.score.count);
   }
-  
+}
 
-
-  // if (Game.blocks.blockOn == true && Game.ball.y + Game.ball.vy === Game.blocks.y && (Game.ball.x + Game.ball.vx <  Game.blocks.x + 100))  {
-  //   if (Game.ball.x + Game.ball.vx > Game.blocks.x ) {
-  //     Game.ball.vy = -Game.ball.vy;
-  //     ctx.clearRect(50,50,75,75);
-  //     Game.score.count++;
-  //     console.log('works');
-  //     $score = $('score').val(Game.score.count);
-  //   }
-  // }
 }
 
 Game.slider = {
@@ -118,7 +123,7 @@ Game.sliderMouseControl = function () {
   canvas.addEventListener("click",function(e){
     if (!running) {
       raf = window.requestAnimationFrame(function () {
-      Game.setup() });
+        Game.loop });
       running = true;
     }
   });
@@ -130,7 +135,6 @@ Game.sliderMouseControl = function () {
 
 Game.setupSlider = function () {
   Game.slider.drawSlider();
-  
   // Prevent the slider from going out of the frame
   if (Game.slider.x + Game.slider.vx > canvas.width || Game.slider.x + Game.slider.vx < 0) {
     Game.slider.vx = -Game.slider.vx;
@@ -149,9 +153,9 @@ function Block(x,y) {
   this.color = '#FF4081';
   this.drawBlock = function(){
     var x = this.x,
-        y = this.y,
-        width = this.width,
-        height = this.height;
+    y = this.y,
+    width = this.width,
+    height = this.height;
 
     ctx.beginPath();
     ctx.fillRect(x,y,width,height);
@@ -166,19 +170,21 @@ function Block(x,y) {
 Game.blocks = {
   blockOn: true,
   blocks: [],
+  columnHeight: 200,
   drawBlocks: function() {
-    var x = 50,
-        y = 50;
-
-    while (x < Game.width) {
-      var block = new Block(x, y);
-      x += block.width + block.spacing;
-      if (x > Game.width) {
-        break;
+    var x,
+    y = 50;
+    while(y < this.columnHeight) {
+      x = 50;
+      while (x < canvas.width) {
+        var block = new Block(x, y);
+        x += block.width + block.spacing;
+        block.drawBlock();
+        this.blocks.push(block);
       }
-      block.drawBlock();
-      this.blocks.push(block);
+      y += block.height + block.spacing;
     }
+
   }
 }
 
@@ -187,9 +193,6 @@ Game.setupBlocks = function () {
 }
 
 // Move this into an initialize function
-window.requestAnimationFrame(function () {
-  Game.setup();
-});
 
 canvas.addEventListener("mouseout",function(e){
   window.cancelAnimationFrame(raf);
@@ -199,10 +202,10 @@ Game.score = {
   count: 0
 }
 
-// Game.restart = function () {
-//   Game.score.count = 0;
-//   Game.blocks.blockOn == true;
-// } 
+Game.restart = function () {
+  Game.score.count = 0;
+  Game.blocks.blockOn == true;
+} 
 
 UI.difficultlySelector = function () {
   $('select');
