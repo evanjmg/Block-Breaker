@@ -1,8 +1,5 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Advanced_animations
 // https://html.spec.whatwg.org/multipage/scripting.html#attr-canvas-width
-window.onload = function () {
-  Game.init();
-}
 
 var Game = Game || {},
 UI = UI || {},
@@ -10,6 +7,32 @@ canvas = document.getElementById("canvas"),
 ctx = canvas.getContext('2d'),
 raf,
 running = false;
+window.onload = function () {
+  Game.init();
+}
+
+Game.state = {
+  over: function () { 
+
+  },
+  start: function () {
+    Game.score.count = 0;
+    Game.blocks.blockOn == true;
+  },
+  difficulty: function () {
+    if ($difficulty.val() === "Easy") {
+      Game.ball.vx = 3;
+      Game.ball.vy = 3;
+    } else if ($difficulty.val() === "Medium") {
+      Game.ball.vx = 5;
+      Game.ball.vy = 5;
+    }
+    else if ($difficulty.val() === "Hard") {
+      Game.ball.vx = 10;
+      Game.ball.vy = 10;
+    }
+  }
+}
 
 Game.init = function () {
   window.requestAnimationFrame(function () {
@@ -33,16 +56,18 @@ Game.loop = function () {
 }
 
 Game.bindEvents = function () {
-  $start = $('#start').on('click', start);
+  $start = $('#start').on('click', Game.state.start);
   $difficulty = $('#difficulty');
-  $score = $('score');
+  $difficulty.on("change", Game.state.difficulty );
+  $score = $('#score');
+  $search = $('#search');
 }
 
 Game.ball = {
-  x: 400,
-  y: 50,
-  vx: 5,
-  vy: 5,
+  x: 350,
+  y: 400,
+  vx: -5,
+  vy: -5,
   radius: 25,
   color: '#FFEB3B',
   drawBall: function() {
@@ -59,8 +84,13 @@ Game.setupBall = function() {
   Game.ball.drawBall();
   Game.ball.x += Game.ball.vx;
   Game.ball.y += Game.ball.vy;
-  // To remove later to make the ball fall throught the bottom
-  if (Game.ball.y + Game.ball.vy > canvas.height || Game.ball.y + Game.ball.vy < 0) {
+// Boundary to hit top
+if (Game.ball.y + Game.ball.vy < 0) {
+  Game.ball.vy = -Game.ball.vy;
+}
+  // 
+  if (Game.ball.y + Game.ball.vy > canvas.height) {
+    Game.lives.loselife();
     Game.ball.vy = -Game.ball.vy;
   }
   // Boundary to hit the sides
@@ -70,15 +100,26 @@ Game.setupBall = function() {
   // Bounce off the slider
   if (Game.ball.y + Game.ball.vy > Game.slider.y
    && Game.ball.y + Game.ball.vy < Game.slider.y + 100
-    && Game.ball.x + Game.ball.vx <  Game.slider.x + 200
-    && Game.ball.x + Game.ball.vx > Game.slider.x ) {
-      Game.ball.vy = -Game.ball.vy;
+   && Game.ball.x + Game.ball.vx <  Game.slider.x + 200
+   && Game.ball.x + Game.ball.vx > Game.slider.x ) {
+    Game.ball.vy = -Game.ball.vy;
+  }
+}
+
+Game.lives = {
+  count: 3,
+  displayLives: $('#lives'),
+  loselife: function () {
+    this.count--
+    if (this.count == 2) {
+      this.displayLives.html('&bullet; &bullet;');
+    } else if (this.count == 1) {
+      this.displayLives.html('&bullet;');
+    } else {
+      this.displayLives.html('');
+      // Game.state.over()
     }
-  // If the game has block(s) 
-  // Set the ball to hit the block
-
-
-
+  }
 }
 
 Game.slider = {
@@ -100,7 +141,7 @@ Game.slider = {
 Game.sliderMouseControl = function () {
   canvas.addEventListener('mousemove', function(e){
     if (!running) {
-      Game.slider.x = e.clientX;
+      Game.slider.x = e.clientX - canvas.offsetLeft
       Game.slider.drawSlider();
     }
   });
@@ -123,9 +164,6 @@ Game.setupSlider = function () {
   if (Game.slider.x + Game.slider.vx > canvas.width || Game.slider.x + Game.slider.vx < 0) {
     Game.slider.vx = -Game.slider.vx;
   }
-
-  // raf = window.requestAnimationFrame(function () {
-  //   Game.drawSlider() });
 }
 
 function Block(x,y) {
@@ -167,7 +205,7 @@ Game.blocks = {
         // store  a block at i or create a new block
         var block = this.blocks[i] || new Block(x, y);
         if (!this.blocks[i]) {
-        this.blocks.push(block) }
+          this.blocks.push(block) }
         //  setup x-axis position of single block
         x += block.width + block.spacing;
         // if block is active, draw it and set collisions
@@ -178,11 +216,11 @@ Game.blocks = {
         }
         if (block.active == true) {
           if (Game.ball.y + Game.ball.vy > block.y 
-              && Game.ball.y + Game.ball.vy < block.y + block.width
-              && Game.ball.x + Game.ball.vx < block.x + block.width
-              && Game.ball.x + Game.ball.vx > block.x ) 
-            {
-              Game.ball.vy = -Game.ball.vy;
+            && Game.ball.y + Game.ball.vy < block.y + block.width
+            && Game.ball.x + Game.ball.vx < block.x + block.width
+            && Game.ball.x + Game.ball.vx > block.x ) 
+          {
+            Game.ball.vy = -Game.ball.vy;
             ctx.clearRect(block.x, block.y, block.width,block.height);
             Game.score.count++;
             $score = $('#score').val(Game.score.count);
@@ -190,10 +228,10 @@ Game.blocks = {
             break;
           }
 
-          }
         }
+      }
       y += block.height + block.spacing;
-     
+
     }
   }
 }
@@ -208,14 +246,7 @@ canvas.addEventListener("mouseout",function(e){
 Game.score = {
   count: 0
 }
-Game.restart = function () {
-  Game.score.count = 0;
-  Game.blocks.blockOn == true;
-} 
 
-UI.difficultlySelector = function () {
-  $('select');
-}
 // interval and frames per second 
 // setInterval(function() {
 //   //update();
