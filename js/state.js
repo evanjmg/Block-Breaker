@@ -1,4 +1,5 @@
 var Game = Game || {};
+var Player = Player || {};
 
 Game.state = {
   status: 'ready',
@@ -18,26 +19,36 @@ Game.state = {
     Game.blocks.blocks = [];
     this.GameOn = true;
     Game.lives.count = 3;
-    Game.score.count = 0;
     Game.loop();
   },
   reset: function () { 
     location.reload() 
   },
   win: function () {
-    $('canvas').fadeOut();
+    $('canvas').fadeOut().hide();
+    Player.calcScore();
     Game.state.status = 'winner'
-    giphyApi();
     winSound = new Audio('./sounds/wingame.mp3');
     winSound.play();
     this.GameOn = false;
     Game.ball.vx = 20;
-    this.GameReset = true;
-    $start.val('Reset Game');
-    this.GameReset = true;
-    $('#canvas-container').hide().append("<h1>You Won!</h1><br/><span id='gif-text'>Here's your gif!</span><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Play Again?' id='play-again' readonly></h2>").fadeIn("slow");
-    $('#play-again').on("click", Game.state.reset);
+    this.GameReset = false;
+    $('#canvas-container').hide().append("<div id='win-container'><h1>You Won!</h1><span id='gif-text'>Your Total Score is " + Player.totalScore + ". Here's your gif!</span><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Continue Playing?' id='continue' readonly></h2></div>").fadeIn("slow");
+    $('#continue').on("click", Game.state.continue);
     
+  },
+  continue: function () { 
+    $('#win-container').remove();
+    $('#top-menu').hide();
+    $('#prompt').fadeIn(); 
+    $('div#top-menu h1').hide()
+    $('#top-menu').append("<h3>Let's keep it up!</h3>")
+    Game.blocks.blocks = [];
+    this.GameOn = true;
+    Game.state.GameReset = false;
+    Game.lives.count = 3;
+    Game.ctx.clearRect(0,0, Game.canvas.width, Game.canvas.height);
+    $('#reminder').fadeIn()
   },
   difficulty: function () {
     if ($difficulty.val() === "Easy") {

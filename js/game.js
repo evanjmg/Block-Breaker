@@ -2,6 +2,7 @@
 // https://html.spec.whatwg.org/multipage/scripting.html#attr-canvas-width
 
 var Game = Game || {};
+var Player = Player || {};
 
 Game.init = function () {
   Game.canvas = document.getElementById("canvas"),
@@ -41,6 +42,8 @@ Game.bindEvents = function () {
   $start = $('#start').on('click', function() {
     if (Game.state.GameReset == false) {
       Game.state.start(); 
+      $('#reminder').animate({ width:0,opacity:0, height:0}, 1000);
+      setTimeout(function(){ $('#reminder').hide(); }, 1000);
     }
     else if (Game.state.GameReset == true) {
       Game.state.reset();
@@ -64,7 +67,11 @@ Game.lives = {
     loselifeSound.play();
     if (this.count == 2) {
       $('#lives').html('&bullet; &bullet;');
-    } else if (this.count == 1) {
+    }
+    else if (this.count == 3) {
+      $('#lives').html('&bullet; &bullet; &bullet;');
+    } 
+    else if (this.count == 1) {
       $('#lives').html('&bullet;');
     } else {
       $('#lives').html('Game Over');

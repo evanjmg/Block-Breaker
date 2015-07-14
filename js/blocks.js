@@ -1,4 +1,5 @@
 var Game = Game || {};
+var Player = Player || {};
 
 function Block(x,y) {
 	this.x = x;
@@ -61,7 +62,7 @@ Game.blocks = {
         		Game.ball.vy = -Game.ball.vy;
         		Game.ctx.clearRect(block.x, block.y, block.width,block.height);
         		Game.score.count++;
-        		$score = $('#score').val(Game.score.count);
+        		$score = $('#score').val(Player.totalScore + Game.score.count);
         		block.active = false;
         		break;
         	}
