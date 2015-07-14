@@ -15,34 +15,36 @@
 	<script src="./js/game.js"></script>
 </head>
 <body>
-<div id="container">
-		
+	<div id="container">
 		<div id="top-menu">
-		<h1>Giphy Breaker</h1>
-		<span id="reminder" class="animated pulse infinite">Click here &rightarrow;</span>
-		<input type="button" value="Start Game" id="start" readonly>
-		<select id="difficulty">
-			<option class="green">Easy</option>
-			<option class="yellow">Medium</option>
-			<option class="red">Hard</option>
-		</select>
-		<span id="score-board">
-		&nbsp; SCORE &nbsp;<input type="text" value="0" id="score"></span>LIVES &nbsp; <span id="lives">&bullet; &bullet; &bullet; </span>
-	</div>
-	<div id="canvas-container">
-	<div id="prompt" class="fadeIn animated">
-	<h1 class="slideInLeft animated">Giphy Breaker</h1>
-	<h2> Type a Phrase. We'll turn it into a GIF that you'll break!</h2>
-	<input type="text" placeholder="Search Gifs" id="search">
-
-	<input type="button" value="Submit" id="submit" >
-	<input type="button" value="Let Us Pick for You" id="random" ></div>
-		<div id="game-message" title="game-message"></div>
-	<canvas width="750" height="500" id="canvas">
-		Your browser does not support this game.
-	</canvas>
-	</div>
-	<footer class="fadeIn animated"><a href="http://evanjmg.com/">by Evan Gillogley 2015</a></footer>
-	</div>
-</body>
-</html>
+			<h1>Giphy Breaker</h1>
+			<span id="reminder" class="animated pulse infinite">Click here &rightarrow;</span>
+			<input type="button" value="Start Game" id="start" readonly>
+			<select id="difficulty">
+				<option class="green">Easy</option>
+				<option class="yellow">Medium</option>
+				<option class="red">Hard</option>
+			</select>
+			<span id="score-board">
+				&nbsp; SCORE &nbsp;<input type="text" value="0" id="score"></span>LIVES &nbsp; <span id="lives">&bullet; &bullet; &bullet; </span>
+			</div>
+			<div id="canvas-container">
+				<div id="all-gifs-page">
+					<input type='button' value='Play Another Round' id='continue2' readonly>
+				<br/>
+				</div>
+				<div id="prompt" class="fadeIn animated">
+					<h1 class="slideInLeft animated">Giphy Breaker</h1>
+					<h2> Type a Phrase. We'll turn it into a GIF that you'll break!</h2>
+					<input type="text" placeholder="Search Gifs" id="search">
+					<input type="button" value="Submit" id="submit" >
+					<input type="button" value="Let Us Pick for You" id="random" ></div>
+					<div id="game-message" title="game-message"></div>
+					<canvas width="750" height="500" id="canvas">
+						Your browser does not support this game.
+					</canvas>
+				</div>
+				<footer class="fadeIn animated"><a href="http://evanjmg.com/">by Evan Gillogley 2015</a></footer>
+			</div>
+		</body>
+		</html>

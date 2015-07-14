@@ -33,7 +33,12 @@ Game.blocks = {
 		y = 50;
 		var i = 0;
     
-
+    if (Game.giphy.img.height > 400) {
+        Game.giphy.img.height = 400;
+    }
+    if (Game.giphy.img.width > 700) {
+        Game.giphy.img.width = 700;
+    }
     // jump to next row
     while(y < Game.giphy.img.height) {
     	x = 50;

@@ -54,7 +54,6 @@ Game.bindEvents = function () {
   $difficulty = $('#difficulty');
   $difficulty.on("change", Game.state.difficulty );
   $score = $('#score');
-  $('#all-gifs').on('click', Game.state.viewGifs);
   this.canvas.addEventListener("mouseout",function(e){
     window.cancelAnimationFrame(Game.raf);});
   

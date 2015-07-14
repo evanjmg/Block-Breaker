@@ -5,13 +5,11 @@ Game.giphy = {
   url: '',
   height: '',
   width: '',
-  gifGenerator: function () {
-    return Player.allGifs.join('<br/>');
-  }
+  allGifs: []
 }
 
 Game.submitGiphyQuery = function () {
-  query = $('#search').val()
+  query = $('#search').val();
   if (query == undefined) {
     query = "random";
   }
