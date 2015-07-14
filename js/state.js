@@ -44,8 +44,6 @@ Game.state = {
     $('#prompt').fadeIn(); 
     $('div#top-menu h1').hide()
     $('#top-menu').append("<h3>Let's keep it up!</h3>");
-    Game.ball.vx = 0;
-    Game.ball.vy = 0;
     Game.blocks.blocks = [];
     this.GameOn = true;
     Game.state.GameReset = false;
