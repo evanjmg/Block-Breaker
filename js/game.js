@@ -13,11 +13,17 @@ window.onload = function () {
 
 Game.state = {
   over: function () { 
-
+    vx: 0;
+    vy: 0;
+    $('#game-message').show();
+    $('#game-message').html = "Game Over";
+    
   },
   start: function () {
     Game.score.count = 0;
-    Game.blocks.blockOn == true;
+    Game.blocks.blocks = [];
+
+
   },
   difficulty: function () {
     if ($difficulty.val() === "Easy") {
@@ -117,7 +123,7 @@ Game.lives = {
       this.displayLives.html('&bullet;');
     } else {
       this.displayLives.html('');
-      // Game.state.over()
+      Game.state.over()
     }
   }
 }
@@ -141,7 +147,7 @@ Game.slider = {
 Game.sliderMouseControl = function () {
   canvas.addEventListener('mousemove', function(e){
     if (!running) {
-      Game.slider.x = e.clientX - canvas.offsetLeft
+      Game.slider.x = e.clientX - canvas.offsetLeft;
       Game.slider.drawSlider();
     }
   });
@@ -179,7 +185,6 @@ function Block(x,y) {
     y = this.y,
     width = this.width,
     height = this.height;
-
     ctx.beginPath();
     ctx.fillRect(x,y,width,height);
     ctx.fillStyle = this.color;
