@@ -30,20 +30,31 @@ h1 {
 	text-transform: uppercase;
 	font-weight: bold;
 }
+div#top-menu h1 {
+	background-color: #FFEB3B;
+	color:#1976D2;
+	width:300px;
+	margin:auto;
+	margin-bottom: 30px;
+}
 input,select {
 	text-transform: uppercase;
 	font-size: 15px;
 	border-radius: 4px;
 	border: 3px solid white;
+	background: transparent;
 	color:#FFFFFF;
 	font-family: 'Futura', Helvetica, sans-serif;
+	margin:4px;
 }
 input#start { 
 	background-color: #f84783;}
 	#score {
 		border:none;
 		width:40px;
-		margin-left: 10px
+		margin:4px;
+		margin-left: 10px;
+		margin-top: -4px
 	}
 	#score-board {
 		margin-left: 20px;
@@ -67,7 +78,7 @@ input#start {
 		background-color: #f84783;
 
 	}
-	#play-again {
+	#continue {
 		font-size: 40px;
 		background-color: #009688;
 
@@ -80,7 +91,41 @@ input#start {
 		background-color: #f84783;
 	}
 	#prompt { display:none;}
- div.zoomIn input { font-size: 30px;}
+ div.zoomIn input { }
+ div#prompt h2 { 
+ 	font-size:40px;}
+ 	div#prompt input { 
+ 		font-size: 25px;
+ 		 	-vendor-animation-duration: 2s;
+ 	}
+ div#prompt {
+ 	margin-top:30%;
+ }
+ div#prompt h1 {
+ 	background-color: #FFEB3B;
+ 	color:#1976D2;
+ 	
+ }
+ #all-gifs {
+ 	font-size: 40px;
+ 	background-color: #f84783;
+ }
+ #gif-text {
+ 	margin:0;
+ 	font-size: 25px;
+ 	margin-bottom: 20px;
+ }
+ footer {
+ 	margin-top: 10%;
+ }
+ footer a {
+ 	text-decoration: none;
+ 	color:white;
+ }
+ footer a:hover{
+ 	color:yellow;
+ }
+
 /*
 .outsideWrapper{ 
     width:256px; height:256px; 

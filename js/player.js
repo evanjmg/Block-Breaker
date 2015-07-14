@@ -5,5 +5,6 @@ Player = {
 	totalScore: 0,
 	calcScore: function () {
 		this.totalScore += Game.score.count;
-	}
+	},
+	allGifs: []
 }

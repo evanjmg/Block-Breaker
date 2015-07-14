@@ -49,14 +49,15 @@ Game.bindEvents = function () {
       Game.state.reset();
     } 
   });
-  $('#random').on("click", Game.submitGiphyQuery)
-  $('#submit').on("click", Game.submitGiphyQuery)
+  $('#random').on("click", Game.submitGiphyQuery);
+  $('#submit').on("click", Game.submitGiphyQuery);
   $difficulty = $('#difficulty');
   $difficulty.on("change", Game.state.difficulty );
   $score = $('#score');
+  $('#all-gifs').on('click', Game.state.viewGifs);
   this.canvas.addEventListener("mouseout",function(e){
-    window.cancelAnimationFrame(Game.raf);
-  });
+    window.cancelAnimationFrame(Game.raf);});
+  
 }
 
 Game.lives = {

@@ -1,10 +1,13 @@
-var Game = Game || {};
-
+var Game = Game || {},
+Player = Player || {};
 Game.giphy = {
   img: '',
   url: '',
   height: '',
-  width: ''
+  width: '',
+  gifGenerator: function () {
+    return Player.allGifs.join('<br/>');
+  }
 }
 
 Game.submitGiphyQuery = function () {

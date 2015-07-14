@@ -33,7 +33,8 @@ Game.state = {
     this.GameOn = false;
     Game.ball.vx = 20;
     this.GameReset = false;
-    $('#canvas-container').hide().append("<div id='win-container'><h1>You Won!</h1><span id='gif-text'>Your Total Score is " + Player.totalScore + ". Here's your gif!</span><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Continue Playing?' id='continue' readonly></h2></div>").fadeIn("slow");
+    Player.allGifs.push(Game.giphy.img);
+    $('#canvas-container').hide().append("<div id='win-container'><h1>You Won!</h1><span id='gif-text'>Your Total Score is " + Player.totalScore + ". Here's your gif!</span><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Play Another Round' id='continue' readonly><input type='button' value='View Completed Gifs' id='all-gifs' readonly></h2></div>").fadeIn("slow");
     $('#continue').on("click", Game.state.continue);
     
   },
@@ -42,13 +43,20 @@ Game.state = {
     $('#top-menu').hide();
     $('#prompt').fadeIn(); 
     $('div#top-menu h1').hide()
-    $('#top-menu').append("<h3>Let's keep it up!</h3>")
+    $('#top-menu').append("<h3>Let's keep it up!</h3>");
+    Game.ball.vx = 0;
+    Game.ball.vy = 0;
     Game.blocks.blocks = [];
     this.GameOn = true;
     Game.state.GameReset = false;
     Game.lives.count = 3;
     Game.ctx.clearRect(0,0, Game.canvas.width, Game.canvas.height);
     $('#reminder').fadeIn()
+  },
+  viewGifs: function () {
+    $('#win-container').remove();
+    $('#top-menu').hide();
+    $('#canvas-container').append(function () { Game.giphy.gifGenerator() });
   },
   difficulty: function () {
     if ($difficulty.val() === "Easy") {
