@@ -1,88 +1,33 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Advanced_animations
 // https://html.spec.whatwg.org/multipage/scripting.html#attr-canvas-width
 
-var Game = Game || {},
-UI = UI || {},
-canvas = document.getElementById("canvas"),
-ctx = canvas.getContext('2d'),
-raf,
-running = false;
-window.onload = function () {
-  $('canvas').hide().fadeIn("slow");
-  Game.init();
-}
-
-Game.state = {
-  status: 'ready',
-  GameOn: false,
-  GameReset: false,
-  over: function () { 
-    this.status = 'over';
-    $start.val('Reset Game');
-    this.GameOn = false;
-    $('canvas').fadeOut();
-    this.GameReset = true;
-    $('#canvas-container').hide().append("<h1>Game Over</h1><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><h2><input type='button' value='Retry' id='retry' readonly></h2>").fadeIn("slow");
-    $('#retry').on("click", Game.state.reset);
-  },
-  start: function () {
-    giphyApi();
-    Game.score.count = 0;
-    Game.blocks.blocks = [];
-    this.GameOn = true;
-    Game.lives.count = 3;
-    Game.score.count = 0;
-    Game.init();
-  },
-  reset: function () { 
-    location.reload() 
-  },
-  win: function () {
-    Game.state.status = 'winner'
-    giphyApi();
-    winSound = new Audio('./sounds/wingame.mp3');
-    winSound.play();
-    this.GameOn = false;
-    Game.ball.vx = 20;
-    this.GameReset = true;
-    $start.val('Reset Game');
-    $('canvas').fadeOut();
-    this.GameReset = true;
-    $('#canvas-container').hide().append("<h1>You Won!</h1><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Play Again?' id='play-again' readonly></h2>").fadeIn("slow");
-    $('#play-again').on("click", Game.state.reset);
-    
-  },
-  difficulty: function () {
-    if ($difficulty.val() === "Easy") {
-      Game.ball.vx = 3;
-      Game.ball.vy = 3;
-    } else if ($difficulty.val() === "Medium") {
-      Game.ball.vx = 5;
-      Game.ball.vy = 5;
-    }
-    else if ($difficulty.val() === "Hard") {
-      Game.ball.vx = 10;
-      Game.ball.vy = 10;
-    }
-  }
-}
+var Game = Game || {};
 
 Game.init = function () {
-  window.requestAnimationFrame(function () {
-    Game.width  = canvas.width;
-    Game.height = canvas.height;
-    Game.loop();
-  });
+  Game.canvas = document.getElementById("canvas"),
+  Game.ctx = canvas.getContext('2d'),
+  Game.running = false;
+  Game.bindEvents();
+  $('canvas').hide();
+  $('#top-menu').hide();
+  Game.prompt();
 }
 
+Game.showCanvas = function () {
+  $('canvas').fadeIn()
+  $('#top-menu').fadeIn()
+}
+
+Game.prompt = function () {
+  $('#prompt').show()
+}
 Game.loop = function () {
-  ctx.clearRect(0,0, canvas.width, canvas.height);
-  Game.bindEvents();
+  Game.ctx.clearRect(0,0, Game.canvas.width, Game.canvas.height);
   Game.setupSlider();
   Game.blocks.drawBlocks();
   Game.setupBall();
   Game.sliderMouseControl();
-  if (Game.score.count >= 21) {
+  if (Game.score.count >= Game.blocks.blocks.length) {
     Game.state.win();
   }
   if (Game.state.GameOn) {
@@ -101,224 +46,37 @@ Game.bindEvents = function () {
       Game.state.reset();
     } 
   });
-  $('#submit').on("click", giphyApi)
+  $('#random').on("click", Game.submitGiphyQuery)
+  $('#submit').on("click", Game.submitGiphyQuery)
   $difficulty = $('#difficulty');
   $difficulty.on("change", Game.state.difficulty );
   $score = $('#score');
-  canvas.addEventListener("mouseout",function(e){
-    window.cancelAnimationFrame(raf);
+  this.canvas.addEventListener("mouseout",function(e){
+    window.cancelAnimationFrame(Game.raf);
   });
-}
-
-Game.ball = {
-  x: 375,
-  y: 375,
-  vx: -5,
-  vy: -5,
-  radius: 25,
-  color: '#FFEB3B',
-  drawBall: function() {
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
-    ctx.fill();
-    ctx.fillStyle = "";
-    ctx.closePath();
-  }
-}
-
-Game.setupBall = function() {
-  Game.ball.drawBall();
-  Game.ball.x += Game.ball.vx;
-  Game.ball.y += Game.ball.vy;
-// Boundary to hit top
-if (Game.ball.y + Game.ball.vy < 0) {
-  Game.ball.vy = -Game.ball.vy;
-}
-  // 
-  if (Game.ball.y + Game.ball.vy > canvas.height) {
-    Game.lives.loselife();
-    Game.ball.vy = -Game.ball.vy;
-  }
-  // Boundary to hit the sides
-  if (Game.ball.x + Game.ball.vx > canvas.width || Game.ball.x + Game.ball.vx < 0) {
-    Game.ball.vx = -Game.ball.vx;
-  }
-  // Bounce off the slider
-  if (Game.ball.y + Game.ball.vy > Game.slider.y
-   && Game.ball.y + Game.ball.vy < Game.slider.y + 100
-   && Game.ball.x + Game.ball.vx <  Game.slider.x + 200
-   && Game.ball.x + Game.ball.vx > Game.slider.x ) {
-    Game.ball.vy = -Game.ball.vy;
-  bounceSound = new Audio('./sounds/beep-ping-sound.wav')
-  bounceSound.play();
-}
 }
 
 Game.lives = {
   count: 3,
-  displayLives: $('#lives'),
   loselife: function () {
-    this.count--
+    this.count--;
     var loselifeSound = new Audio('./sounds/lostlife.wav');
     loselifeSound.play();
     if (this.count == 2) {
-      this.displayLives.html('&bullet; &bullet;');
+      $('#lives').html('&bullet; &bullet;');
     } else if (this.count == 1) {
-      this.displayLives.html('&bullet;');
+      $('#lives').html('&bullet;');
     } else {
-      this.displayLives.html('Game Over');
+      $('#lives').html('Game Over');
       Game.state.over();
     }
   }
 }
 
-Game.slider = {
-  x: 275,
-  y: 400,
-  width: 200,
-  height: 50,
-  color: '#FFEB3B',
-  drawSlider: function() {
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    // ctx.lineWidth="5";
-    // ctx.strokeStyle="white";
-    ctx.rect(this.x, this.y, this.width, this.height);
-    // ctx.stroke();
-    ctx.fill();
-    ctx.closePath();
-  }
-}
-
-Game.sliderMouseControl = function () {
-  canvas.addEventListener('mousemove', function(e){
-    if (!running && Game.state.GameOn === true) {
-      Game.slider.x = e.clientX - canvas.offsetLeft;
-      Game.slider.drawSlider();
-    }
-  });
-  canvas.addEventListener("click",function(e){
-    if (!running) {
-      raf = window.requestAnimationFrame(function () {
-        Game.loop });
-      running = true;
-    }
-  });
-  canvas.addEventListener("mouseout",function(e){
-    window.cancelAnimationFrame(raf);
-    running = false;
-  });
-}
-
-Game.setupSlider = function () {
-  Game.slider.drawSlider();
-  // Prevent the slider from going out of the frame
-  if (Game.slider.x + Game.slider.vx > canvas.width || Game.slider.x + Game.slider.vx < 0) {
-    Game.slider.vx = -Game.slider.vx;
-  }
-}
-
-function Block(x,y) {
-  this.x = x;
-  this.y = y;
-  this.width = 50;
-  this.height = 50;
-  this.spacing = 50;
-  this.active = this.active || true;
-  this.color = '#FF4081';
-  this.drawBlock = function(){
-    var x = this.x,
-    y = this.y,
-    width = this.width,
-    height = this.height;
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.fill();
-    ctx.fillRect(x,y,width,height);
-
-    ctx.closePath();
-  };
-}
-
-Game.blocks = {
-  blocks: [],
-  columnHeight: 300,
-  drawBlocks: function() {
-    var x,
-    y = 50;
-    var i = 0;
-    // jump to next row
-    while(y < this.columnHeight) {
-      x = 50;
-      // setup blocks horizontally
-      while (x < canvas.width) {
-        // store  a block at i or create a new block
-        var block = this.blocks[i] || new Block(x, y);
-        if (!this.blocks[i]) {
-          this.blocks.push(block) }
-        //  setup x-axis position of single block
-        x += block.width + block.spacing;
-        // if block is active, draw it and set collisions
-        block.drawBlock();
-        i++;
-        if (block.active == false) {
-          ctx.clearRect(block.x, block.y, block.width,block.height);
-        }
-        if (block.active == true) {
-          if (Game.ball.y + Game.ball.vy > block.y 
-            && Game.ball.y + Game.ball.vy < block.y + block.width
-            && Game.ball.x + Game.ball.vx < block.x + block.width
-            && Game.ball.x + Game.ball.vx > block.x ) 
-          {
-            var breakSound = new Audio('./sounds/brakeblock.wav');
-            breakSound.play();
-            Game.ball.vy = -Game.ball.vy;
-            ctx.clearRect(block.x, block.y, block.width,block.height);
-            Game.score.count++;
-            $score = $('#score').val(Game.score.count);
-            block.active = false;
-            break;
-          }
-
-        }
-      }
-      y += block.height + block.spacing;
-
-    }
-  }
-}
-
-
 Game.score = {
   count: 0
 }
-Game.giphy = {
-  url: '',
-}
 
 
-function giphyApi () {
 
-  if ($('search').val() !== undefined) { 
-    query = $('search').val(); }
-  else if (Game.state.status = 'winner') {
-     query = "winner"
-   }
-  else {  query = 'loser';}
-   request = new XMLHttpRequest;
-   request.open('GET', 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag='+ query, true);
-   request.onload = function() {
-    if (request.status >= 200 && request.status < 400){
-      data = JSON.parse(request.responseText).data.image_url;
-      Game.giphy.url = data;
-
-    } else {
-      console.log('reached giphy, but API returned an error');
-    }
-  };
-  request.onerror = function() {
-    console.log('connection error');
-  };
-  request.send();
-};
+window.onload = Game.init;
