@@ -62,19 +62,20 @@ input#submit {
 #canvas-container {
 width:100%;
 	margin: auto;
-/*	position:relative;*/
 }
-#game-message {
-/*	position: absolute;*/
-
-	width:200px;
-	height:500px;
-	display:none;
-	background-color: white;
-	color:black;
-	z-index: 10;
-	content: "Oh no, you lost a life";
-
+#retry {
+	font-size: 40px;
+	background-color: #f84783;
+	
+}
+#play-again {
+	font-size: 40px;
+	background-color: #009688;
+	
+}
+div#canvas-container h1 {
+	font-size: 5em;
+	vertical-align: middle;
 }
 /*
 .outsideWrapper{ 

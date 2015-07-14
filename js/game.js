@@ -8,22 +8,46 @@ ctx = canvas.getContext('2d'),
 raf,
 running = false;
 window.onload = function () {
+  $('canvas').hide().fadeIn("slow");
   Game.init();
 }
 
 Game.state = {
+  GameOn: false,
+  GameReset: false,
   over: function () { 
-    vx: 0;
-    vy: 0;
-    $('#game-message').show();
-    $('#game-message').html = "Game Over";
-    
+   
+
+    $start.val('Reset Game');
+    this.GameOn = false;
+    $('canvas').fadeOut();
+    this.GameReset = true;
+    $('#canvas-container').hide().append("<h1>Game Over</h1><br/><h2><input type='button' value='Retry' id='retry' readonly></h2>").fadeIn("slow");
+    $('#retry').on("click", Game.state.reset);
   },
   start: function () {
     Game.score.count = 0;
     Game.blocks.blocks = [];
-
-
+    this.GameOn = true;
+    Game.lives.count = 3;
+    Game.score.count = 0;
+    Game.init();
+  },
+  reset: function () { 
+    location.reload() 
+  },
+  win: function () {
+    winSound = new Audio('./sounds/wingame.mp3');
+    winSound.play();
+    this.GameOn = false;
+    Game.ball.vx = 20;
+    this.GameReset = true;
+    $start.val('Reset Game');
+    $('canvas').fadeOut();
+    this.GameReset = true;
+    $('#canvas-container').hide().append("<h1>You Won!</h1><br/><input type='button' value='Play Again?' id='play-again' readonly></h2>").fadeIn("slow");
+    $('#play-again').on("click", Game.state.reset);
+    
   },
   difficulty: function () {
     if ($difficulty.val() === "Easy") {
@@ -56,13 +80,25 @@ Game.loop = function () {
   Game.blocks.drawBlocks();
   Game.setupBall();
   Game.sliderMouseControl();
-  window.requestAnimationFrame(function () {
-    Game.loop();
-  });
+  if (Game.score.count >= 21) {
+    Game.state.win();
+  }
+  if (Game.state.GameOn) {
+    window.requestAnimationFrame(function () {
+      Game.loop();
+    });
+  }
 }
 
 Game.bindEvents = function () {
-  $start = $('#start').on('click', Game.state.start);
+  $start = $('#start').on('click', function() {
+    if (Game.state.GameReset == false) {
+      Game.state.start(); 
+    }
+    else if (Game.state.GameReset == true) {
+      Game.state.reset();
+    } 
+  });
   $difficulty = $('#difficulty');
   $difficulty.on("change", Game.state.difficulty );
   $score = $('#score');
@@ -70,16 +106,16 @@ Game.bindEvents = function () {
 }
 
 Game.ball = {
-  x: 350,
-  y: 400,
+  x: 375,
+  y: 375,
   vx: -5,
   vy: -5,
   radius: 25,
   color: '#FFEB3B',
   drawBall: function() {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
     ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
     ctx.fill();
     ctx.fillStyle = "";
     ctx.closePath();
@@ -109,7 +145,9 @@ if (Game.ball.y + Game.ball.vy < 0) {
    && Game.ball.x + Game.ball.vx <  Game.slider.x + 200
    && Game.ball.x + Game.ball.vx > Game.slider.x ) {
     Game.ball.vy = -Game.ball.vy;
-  }
+  bounceSound = new Audio('./sounds/beep-ping-sound.wav')
+  bounceSound.play();
+}
 }
 
 Game.lives = {
@@ -117,36 +155,40 @@ Game.lives = {
   displayLives: $('#lives'),
   loselife: function () {
     this.count--
+    var loselifeSound = new Audio('./sounds/lostlife.wav');
+    loselifeSound.play();
     if (this.count == 2) {
       this.displayLives.html('&bullet; &bullet;');
     } else if (this.count == 1) {
       this.displayLives.html('&bullet;');
     } else {
-      this.displayLives.html('');
-      Game.state.over()
+      this.displayLives.html('Game Over');
+      Game.state.over();
     }
   }
 }
 
 Game.slider = {
-  x: 350,
+  x: 275,
   y: 400,
   width: 200,
   height: 50,
   color: '#FFEB3B',
   drawSlider: function() {
     ctx.beginPath();
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    ctx.fillStyle = Game.slider.color;
+    ctx.fillStyle = this.color;
+    // ctx.lineWidth="5";
+    // ctx.strokeStyle="white";
+    ctx.rect(this.x, this.y, this.width, this.height);
+    // ctx.stroke();
     ctx.fill();
-    ctx.fillStyle = "";
     ctx.closePath();
   }
 }
 
 Game.sliderMouseControl = function () {
   canvas.addEventListener('mousemove', function(e){
-    if (!running) {
+    if (!running && Game.state.GameOn === true) {
       Game.slider.x = e.clientX - canvas.offsetLeft;
       Game.slider.drawSlider();
     }
@@ -186,16 +228,15 @@ function Block(x,y) {
     width = this.width,
     height = this.height;
     ctx.beginPath();
-    ctx.fillRect(x,y,width,height);
     ctx.fillStyle = this.color;
     ctx.fill();
-    ctx.fillStyle = "";
+    ctx.fillRect(x,y,width,height);
+
     ctx.closePath();
   };
 }
 
 Game.blocks = {
-  blockOn: true,
   blocks: [],
   columnHeight: 300,
   drawBlocks: function() {
@@ -225,6 +266,8 @@ Game.blocks = {
             && Game.ball.x + Game.ball.vx < block.x + block.width
             && Game.ball.x + Game.ball.vx > block.x ) 
           {
+            var breakSound = new Audio('./sounds/brakeblock.wav');
+            breakSound.play();
             Game.ball.vy = -Game.ball.vy;
             ctx.clearRect(block.x, block.y, block.width,block.height);
             Game.score.count++;
