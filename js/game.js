@@ -13,19 +13,20 @@ window.onload = function () {
 }
 
 Game.state = {
+  status: 'ready',
   GameOn: false,
   GameReset: false,
   over: function () { 
-   
-
+    this.status = 'over';
     $start.val('Reset Game');
     this.GameOn = false;
     $('canvas').fadeOut();
     this.GameReset = true;
-    $('#canvas-container').hide().append("<h1>Game Over</h1><br/><h2><input type='button' value='Retry' id='retry' readonly></h2>").fadeIn("slow");
+    $('#canvas-container').hide().append("<h1>Game Over</h1><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><h2><input type='button' value='Retry' id='retry' readonly></h2>").fadeIn("slow");
     $('#retry').on("click", Game.state.reset);
   },
   start: function () {
+    giphyApi();
     Game.score.count = 0;
     Game.blocks.blocks = [];
     this.GameOn = true;
@@ -37,6 +38,8 @@ Game.state = {
     location.reload() 
   },
   win: function () {
+    Game.state.status = 'winner'
+    giphyApi();
     winSound = new Audio('./sounds/wingame.mp3');
     winSound.play();
     this.GameOn = false;
@@ -45,7 +48,7 @@ Game.state = {
     $start.val('Reset Game');
     $('canvas').fadeOut();
     this.GameReset = true;
-    $('#canvas-container').hide().append("<h1>You Won!</h1><br/><input type='button' value='Play Again?' id='play-again' readonly></h2>").fadeIn("slow");
+    $('#canvas-container').hide().append("<h1>You Won!</h1><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Play Again?' id='play-again' readonly></h2>").fadeIn("slow");
     $('#play-again').on("click", Game.state.reset);
     
   },
@@ -71,7 +74,6 @@ Game.init = function () {
     Game.loop();
   });
 }
-
 
 Game.loop = function () {
   ctx.clearRect(0,0, canvas.width, canvas.height);
@@ -99,10 +101,13 @@ Game.bindEvents = function () {
       Game.state.reset();
     } 
   });
+  $('#submit').on("click", giphyApi)
   $difficulty = $('#difficulty');
   $difficulty.on("change", Game.state.difficulty );
   $score = $('#score');
-  $search = $('#search');
+  canvas.addEventListener("mouseout",function(e){
+    window.cancelAnimationFrame(raf);
+  });
 }
 
 Game.ball = {
@@ -285,24 +290,35 @@ Game.blocks = {
 }
 
 
-// Move this into an initialize function
-
-canvas.addEventListener("mouseout",function(e){
-  window.cancelAnimationFrame(raf);
-});
-
 Game.score = {
   count: 0
 }
+Game.giphy = {
+  url: '',
+}
 
-// interval and frames per second 
-// setInterval(function() {
-//   //update();
-//   draw();
-// // }, 1000/FPS);
 
-// acceleration ball.vy *= .99;
-// ball.vy += .25;
-// cool trailing effect 
-// ctx.fillStyle = 'rgba(255,255,255,0.3)';
-// ctx.fillRect(0,0,canvas.width,canvas.height);
+function giphyApi () {
+
+  if ($('search').val() !== undefined) { 
+    query = $('search').val(); }
+  else if (Game.state.status = 'winner') {
+     query = "winner"
+   }
+  else {  query = 'loser';}
+   request = new XMLHttpRequest;
+   request.open('GET', 'http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag='+ query, true);
+   request.onload = function() {
+    if (request.status >= 200 && request.status < 400){
+      data = JSON.parse(request.responseText).data.image_url;
+      Game.giphy.url = data;
+
+    } else {
+      console.log('reached giphy, but API returned an error');
+    }
+  };
+  request.onerror = function() {
+    console.log('connection error');
+  };
+  request.send();
+};
