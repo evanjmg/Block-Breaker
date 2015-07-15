@@ -1,6 +1,5 @@
 var Game = Game || {};
 
-
 Game.slider = {
   x: 275,
   y: 400,
@@ -9,14 +8,12 @@ Game.slider = {
   color: '#FFEB3B',
   drawSlider: function() {
     Game.ctx.beginPath();
-    // Game.ctx.fillStyle = this.color;
     Game.ctx.fillStyle = this.color;
     Game.ctx.rect(this.x, this.y, this.width, this.height);
     Game.ctx.fill();
     Game.ctx.closePath();
   }
 }
-
 Game.sliderMouseControl = function () {
   this.canvas.addEventListener('mousemove', function(e){
     if ( Game.state.GameOn === true) {
@@ -24,13 +21,6 @@ Game.sliderMouseControl = function () {
       Game.slider.drawSlider();
     }
   });
-  // this.canvas.addEventListener("click",function(e){
-  //   if (!running) {
-  //     raf = window.requestAnimationFrame(function () {
-  //       Game.loop });
-  //     running = true;
-  //   }
-  // });
   this.canvas.addEventListener("mouseout",function(e){
     window.cancelAnimationFrame(Game.raf);
   });

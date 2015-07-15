@@ -19,8 +19,8 @@
 	<div id="container">
 		<div id="top-menu">
 			<h1>Giphy Breaker</h1>
-			<span id="reminder" class="animated pulse infinite">Click here &rightarrow;</span>
-			<input type="button" value="Start Game" id="start" readonly>
+			<span id="reminder" class="animated bounce infinite">Click here &rightarrow;</span>
+			<input type="button" value="Start Game" id="start" readonly class="pulse animated infinite">
 			<select id="difficulty">
 				<option class="green">Easy</option>
 				<option class="yellow">Medium</option>
@@ -31,15 +31,15 @@
 			</div>
 			<div id="canvas-container">
 				<div id="all-gifs-page">
-					<input type='button' value='Play Another Round' id='continue2' readonly>
+					<input type='button' value='Play Another Round' id='continue2' readonly class="pulse animated infinite">
 				<br/>
 				</div>
 				<div id="prompt" class="fadeIn animated">
 					<h1 class="slideInLeft animated">Giphy Breaker</h1>
 					<h2> Type a Phrase. We'll turn it into a GIF that you'll break!</h2>
 					<input type="text" placeholder="Search Gifs" id="search">
-					<input type="button" value="Submit" id="submit" >
-					<input type="button" value="Let Us Pick for You" id="random" ></div>
+					<input type="button" value="Submit" id="submit" class="pulse animated infinite">
+					<input type="button" value="Let Us Pick for You" id="random" class="pulse animated infinite" ></div>
 					<div id="game-message" title="game-message"></div>
 					<canvas width="750" height="500" id="canvas">
 						Your browser does not support this game.

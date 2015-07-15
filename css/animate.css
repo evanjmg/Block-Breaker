@@ -160,7 +160,7 @@ Copyright (c) 2015 Daniel Eden
   }
 }
 
-.pulse {
+.pulse:hover {
   -webkit-animation-name: pulse;
   animation-name: pulse;
 }

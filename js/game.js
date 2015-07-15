@@ -17,6 +17,7 @@ Game.init = function () {
 Game.showCanvas = function () {
   $('canvas').fadeIn()
   $('#top-menu').fadeIn()
+  Game.state.GameOn === false;
 }
 
 Game.prompt = function () {
@@ -56,7 +57,15 @@ Game.bindEvents = function () {
   $score = $('#score');
   this.canvas.addEventListener("mouseout",function(e){
     window.cancelAnimationFrame(Game.raf);});
-  
+  // $('#submit').on("mouseover", function () {
+  //   $('#submit').addClass("pulse animated infinite");
+  // } );
+  // $('#random').on("mouseover", function () {
+  //   $('#random').addClass("pulse animated infinite");
+  // } );
+  // $('#random').on("mouseout", function () {
+  //   $('#random').removeClass("pulse animated infinite");
+  // } );
 }
 
 Game.lives = {

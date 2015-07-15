@@ -42,7 +42,6 @@ Game.state = {
     $('#canvas-container').hide().append("<div id='win-container'><h1>You Won!</h1><span id='gif-text'>Your Total Score is " + Player.totalScore + ". Here's your gif!</span><br/><img id='overImgUrl' src='" + Game.giphy.url + "' width='400px' height='250px'><br/><input type='button' value='Play Another Round' id='continue' readonly><input type='button' value='View Completed Gifs' id='all-gifs' readonly></h2></div>").fadeIn("slow");
     $('#continue').on("click", Game.state.continue);
     $('#all-gifs').on('click', Game.state.viewGifs);
-    
   },
   continue: function () { 
     $('#win-container').remove();
@@ -58,22 +57,26 @@ Game.state = {
   },
   viewGifs: function () {
     $("#all-gifs-page").fadeIn();
-    $('#continue2').on("click", Game.state.continue);
-    $('#win-container').remove();
-    $('#top-menu').hide();
-  },
-  difficulty: function () {
-    if ($difficulty.val() === "Easy") {
-      Game.ball.vx = 3;
-      Game.ball.vy = 3;
-    } else if ($difficulty.val() === "Medium") {
-      Game.ball.vx = 5;
-      Game.ball.vy = 5;
+    $('#continue2').on("click", function () { 
+      if (Game.state.status === "winner") 
+        { Game.state.continue() } else {
+          Game.state.reset() }
+        });
+        $('#win-container').remove();
+        $('#top-menu').hide();
+      },
+      difficulty: function () {
+        if ($difficulty.val() === "Easy") {
+          Game.ball.vx = 3;
+          Game.ball.vy = 3;
+        } else if ($difficulty.val() === "Medium") {
+          Game.ball.vx = 5;
+          Game.ball.vy = 5;
+        }
+        else if ($difficulty.val() === "Hard") {
+          Game.ball.vx = 10;
+          Game.ball.vy = 10;
+        }
+      }
     }
-    else if ($difficulty.val() === "Hard") {
-      Game.ball.vx = 10;
-      Game.ball.vy = 10;
-    }
-  }
-}
 

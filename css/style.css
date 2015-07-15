@@ -65,12 +65,13 @@ input#start {
 	input#submit {
 		background-color: #00BCD4;
 	}
+
 	#canvas-container {
 		width:100%;
 		margin: auto;
 	}
 	#retry {
-		font-size: 40px;
+		font-size: 25px;
 		background-color: #f84783;
 
 	}
