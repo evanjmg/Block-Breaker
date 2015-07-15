@@ -7,7 +7,6 @@ Game.giphy = {
   width: '',
   allGifs: []
 }
-
 Game.submitGiphyQuery = function () {
   query = $('#search').val();
   if (query == undefined) {
@@ -15,7 +14,6 @@ Game.submitGiphyQuery = function () {
   }
   giphyApi(query);
 }
-
 function giphyApi (query) {
  request = new XMLHttpRequest;
  request.open('GET', 'https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag='+ query, true);
@@ -37,7 +35,6 @@ function giphyApi (query) {
     Game.showCanvas();
     $('#prompt').hide();
   };
-
   request.onerror = function() {
     console.log('connection error');
   };

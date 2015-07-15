@@ -25,7 +25,6 @@ Game.sliderMouseControl = function () {
     window.cancelAnimationFrame(Game.raf);
   });
 }
-
 Game.setupSlider = function () {
   Game.slider.drawSlider();
   // Prevent the slider from going out of the frame

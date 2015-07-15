@@ -1,14 +1,9 @@
 var Game = Game || {};
 var Player = Player || {};
-
 function Block(x,y) {
 	this.x = x;
 	this.y = y;
-	this.width = 50;
-	this.height = 50;
-	this.spacing = 50;
 	this.active = this.active || true;
-	this.color = '#FF4081';
 	this.drawBlock = function() {
 		var x = this.x,
 		y = this.y,
@@ -23,7 +18,6 @@ function Block(x,y) {
 		Game.ctx.closePath();
 	};
 }
-
 Game.blocks = {
 	blocks: [],
    
@@ -32,7 +26,11 @@ Game.blocks = {
 		var x,
 		y = 50;
 		var i = 0;
-    
+    Block.prototype.width = 50;
+    Block.prototype.height = 50;
+    Block.prototype.spacing = 50;
+
+
     if (Game.giphy.img.height > 400) {
         Game.giphy.img.height = 400;
     }

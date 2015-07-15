@@ -1,9 +1,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Advanced_animations
 // https://html.spec.whatwg.org/multipage/scripting.html#attr-canvas-width
-
 var Game = Game || {};
 var Player = Player || {};
-
 Game.init = function () {
   Game.canvas = document.getElementById("canvas"),
   Game.ctx = canvas.getContext('2d'),
@@ -13,13 +11,11 @@ Game.init = function () {
   $('#top-menu').hide();
   Game.prompt();
 }
-
 Game.showCanvas = function () {
   $('canvas').fadeIn()
   $('#top-menu').fadeIn()
   Game.state.GameOn === false;
 }
-
 Game.prompt = function () {
   $('#prompt').show()
 }
@@ -38,7 +34,6 @@ Game.loop = function () {
     });
   }
 }
-
 Game.bindEvents = function () {
   $start = $('#start').on('click', function() {
     if (Game.state.GameReset == false) {
@@ -57,17 +52,7 @@ Game.bindEvents = function () {
   $score = $('#score');
   this.canvas.addEventListener("mouseout",function(e){
     window.cancelAnimationFrame(Game.raf);});
-  // $('#submit').on("mouseover", function () {
-  //   $('#submit').addClass("pulse animated infinite");
-  // } );
-  // $('#random').on("mouseover", function () {
-  //   $('#random').addClass("pulse animated infinite");
-  // } );
-  // $('#random').on("mouseout", function () {
-  //   $('#random').removeClass("pulse animated infinite");
-  // } );
 }
-
 Game.lives = {
   count: 3,
   loselife: function () {
@@ -88,11 +73,8 @@ Game.lives = {
     }
   }
 }
-
 Game.score = {
   count: 0
 }
-
-
 
 window.onload = Game.init;

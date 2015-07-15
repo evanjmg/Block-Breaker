@@ -16,7 +16,6 @@ Game.ball = {
     Game.ctx.closePath();
   }
 }
-
 Game.setupBall = function() {
   Game.ball.drawBall();
   Game.ball.x += Game.ball.vx;
