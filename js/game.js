@@ -9,16 +9,14 @@ Game.init = function () {
   Game.bindEvents();
   $('canvas').hide();
   $('#top-menu').hide();
-  Game.prompt();
+  $('#prompt').show()
 }
 Game.showCanvas = function () {
   $('canvas').fadeIn()
   $('#top-menu').fadeIn()
   Game.state.GameOn === false;
 }
-Game.prompt = function () {
-  $('#prompt').show()
-}
+
 Game.loop = function () {
   Game.ctx.clearRect(0,0, Game.canvas.width, Game.canvas.height);
   Game.setupSlider();

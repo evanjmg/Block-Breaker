@@ -65,7 +65,7 @@ Game.state = {
         $('#win-container').remove();
         $('#top-menu').hide();
       },
-      difficulty: function () {
+  difficulty: function () {
         if ($difficulty.val() === "Easy") {
           Game.ball.vx = 3;
           Game.ball.vy = 3;
