@@ -14,6 +14,10 @@ After winning a level, you can collect the gif and start a new query and game!
 #The Build:
  Giphy API, HTML Canvas, jQuery, CSS, HTML 5, Animate.css, and Javascript to create the game.  
 <br/>
+#In Development 
+-Adding Framerate control
+-Improving overall performance of code
+
  #Difficulties and Bugs:
  The collisions with the ball were the hardest part. Once I got the collisions working and blocks disapearing, implementing the Giphy API was relatively straightforward. There may still be a couple of bugs. If you receive an image that is larger than the canvas, it may automatically win.  
 
